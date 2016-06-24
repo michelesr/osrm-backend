@@ -42,6 +42,33 @@ namespace osrm
 namespace extractor
 {
 
+namespace lookup
+{
+// Set to 1 byte alignment
+#pragma pack(push, r1, 1)
+struct SegmentHeaderBlock
+{
+    unsigned num_osm_nodes;
+    OSMNodeID previous_osm_node_id;
+};
+
+struct SegmentBlock
+{
+    OSMNodeID this_osm_node_id;
+    double segment_length;
+    int segment_weight;
+};
+
+struct PenaltyBlock
+{
+    unsigned fixed_penalty;
+    OSMNodeID from_id;
+    OSMNodeID via_id;
+    OSMNodeID to_id;
+};
+#pragma pack(pop, r1)
+}
+
 class EdgeBasedGraphFactory
 {
   public:

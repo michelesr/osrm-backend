@@ -1,3 +1,7 @@
+# 5.2.6
+  - Changes:
+    - Speed up loading of traffic data files
+
 # 5.2.5
   - Bugfixes
     - Fixes a segfault caused by incorrect trimming logic for very short steps.
