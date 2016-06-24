@@ -1,5 +1,5 @@
-#include "extractor/edge_based_graph_factory.hpp"
 #include "extractor/edge_based_edge.hpp"
+#include "extractor/edge_based_graph_factory.hpp"
 #include "util/coordinate.hpp"
 #include "util/coordinate_calculation.hpp"
 #include "util/exception.hpp"
@@ -417,7 +417,7 @@ void EdgeBasedGraphFactory::GenerateEdgeExpandedEdges(
                     use_turn_function ? GetTurnPenalty(turn_angle, lua_state) : 0;
                 const auto turn_instruction = turn.instruction;
 
-                if (guidance::isUturn(turn_instruction))
+                if (turn_instruction.direction_modifier == guidance::DirectionModifier::UTurn)
                 {
                     distance += profile_properties.u_turn_penalty;
                 }
