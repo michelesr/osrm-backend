@@ -38,8 +38,24 @@ class NearestAPI final : public BaseAPI
                        phantom_nodes.front().end(),
                        waypoints.values.begin(),
                        [this](const PhantomNodeWithDistance &phantom_with_distance) {
-                           auto waypoint = MakeWaypoint(phantom_with_distance.phantom_node);
+                           auto& phantom_node = phantom_with_distance.phantom_node;
+                           auto waypoint = MakeWaypoint(phantom_node);
                            waypoint.values["distance"] = phantom_with_distance.distance;
+
+                           OSMNodeID node_id;
+
+                           if (phantom_node.forward_packed_geometry_id != SPECIAL_EDGEID) {
+                               std::vector<NodeID> forward_geometry;
+                               facade.GetUncompressedGeometry(phantom_node.forward_packed_geometry_id, forward_geometry);
+                               node_id = facade.GetOSMNodeIDOfNode(forward_geometry[phantom_node.fwd_segment_position]);
+                           }
+                           else {
+                               std::vector<NodeID> reverse_geometry;
+                               facade.GetUncompressedGeometry(phantom_node.reverse_packed_geometry_id, reverse_geometry);
+                               node_id = facade.GetOSMNodeIDOfNode(reverse_geometry[reverse_geometry.size() - phantom_node.fwd_segment_position - 1]);
+                           }
+
+                           waypoint.values["osm_id"] = static_cast<std::uint64_t>(node_id);
                            return waypoint;
                        });
 
